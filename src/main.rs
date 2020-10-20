@@ -18,7 +18,7 @@ fn main() {
     let repo = Repository::init(root).unwrap();
     let mut index = repo.index().unwrap();
 
-    File::create(file_name).unwrap();
+    File::create(Path::new(root).join(file_name)).unwrap();
 
     index.add_path(Path::new(file_name)).unwrap();
     index.write().unwrap();
