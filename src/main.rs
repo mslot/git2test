@@ -10,16 +10,20 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let root = &args[1];
     let file_name = &args[2];
-    let repo = if Path::new(root).exists() {
+
+    let repo = create_or_open(root);
+    let mut index = stage(&repo, root, file_name);
+    commit(&repo, &mut index);
+}
+
+fn create_or_open(root: &str) -> Repository {
+    if Path::new(root).exists() {
         println!("open");
         Repository::open(root).unwrap()
     } else {
         println!("init");
         Repository::init(root).unwrap()
-    };
-
-    let mut index = stage(&repo, root, file_name);
-    commit(&repo, &mut index);
+    }
 }
 fn stage(repo: &Repository, root: &str, file_name: &str) -> Index {
     let mut index = repo.index().unwrap();
